@@ -1,4 +1,4 @@
-package com.bachelor;
+package myspotify;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
