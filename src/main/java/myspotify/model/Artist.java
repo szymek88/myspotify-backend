@@ -2,6 +2,7 @@ package myspotify.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Entity
 @Data
+@ToString(exclude = "songs")
 public class Artist {
 
     @Id

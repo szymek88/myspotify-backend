@@ -4,12 +4,14 @@ import lombok.Data;
 import myspotify.model.Artist;
 import myspotify.model.Song;
 import myspotify.repository.ArtistRepository;
-import myspotify.repository.SongRepository;
+import myspotify.service.SongService;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +19,7 @@ import java.util.List;
 public class MySpotifyApplication {
 
 	@Bean
-	CommandLineRunner populateDatabase(SongRepository songRepository,
+	CommandLineRunner populateDatabase(SongService songService,
 									   ArtistRepository artistRepository) {
 		return (args) -> {
 			List<SongData> songDataList = new ArrayList<>();
@@ -27,7 +29,11 @@ public class MySpotifyApplication {
 
 			songDataList.forEach(songData -> {
 				Artist artist = artistRepository.save(new Artist(songData.getArtistName()));
-				songRepository.save(new Song(songData.getSongName(), artist, songData.getFilename()));
+				try {
+					songService.save(new Song(songData.getSongName(), artist, songData.getFilename()));
+				} catch (IOException | SolrServerException e) {
+					e.printStackTrace();
+				}
 			});
 		};
 	}

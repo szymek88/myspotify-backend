@@ -1,2 +1,9 @@
 storage:
   location: "audio"
+
+solr:
+  home: "solr"
+  defaultCore: "songs"
+  suggester:
+    requestHandler: "/suggest"
+    dictionary: "suggester"

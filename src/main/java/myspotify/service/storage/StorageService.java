@@ -1,4 +1,4 @@
-package myspotify.storage;
+package myspotify.service.storage;
 
 import org.springframework.core.io.Resource;
 

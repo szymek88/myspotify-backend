@@ -1,7 +1,7 @@
 package myspotify.rest;
 
 import myspotify.hateoas.SongResource;
-import myspotify.repository.SongRepository;
+import myspotify.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resources;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,19 +13,19 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 @RestController
-public class SongRestController {
+class SongRestController {
 
-    private final SongRepository songRepository;
+    private final SongService songService;
 
     @Autowired
-    public SongRestController(SongRepository songRepository) {
-        this.songRepository = songRepository;
+    public SongRestController(SongService songService) {
+        this.songService = songService;
     }
 
     @RequestMapping(value = "/songs", method = RequestMethod.GET,
             produces = "application/json; charset=UTF-8")
     Resources<SongResource> readSongs() {
-        List<SongResource> songResources = songRepository
+        List<SongResource> songResources = songService
                 .findAll()
                 .stream()
                 .map(SongResource::new)
