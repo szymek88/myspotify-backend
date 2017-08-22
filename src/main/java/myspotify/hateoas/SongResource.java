@@ -2,6 +2,7 @@ package myspotify.hateoas;
 
 import lombok.Getter;
 import myspotify.model.Song;
+import myspotify.rest.AlbumRestController;
 import myspotify.rest.AudioFileRestController;
 import org.springframework.hateoas.ResourceSupport;
 
@@ -18,5 +19,7 @@ public class SongResource extends ResourceSupport {
         String filename = song.getFilename();
         this.add(linkTo(methodOn(AudioFileRestController.class, filename)
                 .serveAudioFile(filename)).withRel("audio"));
+        this.add(linkTo(methodOn(AlbumRestController.class)
+                .readAlbum(song.getAlbum().getId())).withRel("album"));
     }
 }

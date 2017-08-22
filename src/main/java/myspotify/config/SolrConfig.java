@@ -14,7 +14,7 @@ class SolrConfig {
     @Value("${solr.home}")
     private String solrHome;
 
-    @Value("${solr.defaultCore}")
+    @Value("${solr.cores.default}")
     private String defaultCoreName;
 
     @Bean

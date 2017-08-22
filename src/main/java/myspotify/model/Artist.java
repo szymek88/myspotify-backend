@@ -13,8 +13,8 @@ import java.util.List;
 
 @Entity
 @Data
-@ToString(exclude = "songs")
-public class Artist {
+@ToString(exclude = "songs, albums")
+public class Artist implements NamedEntity {
 
     @Id
     @GeneratedValue
@@ -25,6 +25,10 @@ public class Artist {
     @OneToMany(mappedBy = "artist")
     @JsonIgnore
     private List<Song> songs = new ArrayList<>();
+
+    @OneToMany(mappedBy = "artist")
+    @JsonIgnore
+    private List<Album> albums = new ArrayList<>();
 
     public Artist(String name) {
         this.name = name;

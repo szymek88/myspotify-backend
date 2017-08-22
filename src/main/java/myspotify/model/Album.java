@@ -2,12 +2,16 @@ package myspotify.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
-public class Song implements NamedEntity {
+@ToString(exclude = "songs")
+public class Album implements NamedEntity {
 
     @Id
     @GeneratedValue
@@ -18,21 +22,15 @@ public class Song implements NamedEntity {
     @ManyToOne
     private Artist artist;
 
-    @ManyToOne
+    @OneToMany(mappedBy = "album")
     @JsonIgnore
-    private Album album;
+    private List<Song> songs = new ArrayList<>();
 
-    @JsonIgnore
-    private String filename;
-
-    public Song(String name, Artist artist, Album album, String filename) {
+    public Album(String name, Artist artist) {
         this.name = name;
         this.artist = artist;
-        this.album = album;
-        this.filename = filename;
     }
 
-    // jpa
-    Song() {
-    }
+    // required by entity classes
+    Album() {}
 }

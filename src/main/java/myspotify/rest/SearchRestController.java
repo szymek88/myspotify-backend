@@ -3,7 +3,7 @@ package myspotify.rest;
 import myspotify.hateoas.SearchResultsResources;
 import myspotify.service.search.SearchResults;
 import myspotify.service.search.SearchService;
-import myspotify.service.search.Suggestions;
+import myspotify.service.search.SearchSuggestions;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +27,7 @@ class SearchRestController {
     }
 
     @RequestMapping(value = "/suggest", method = RequestMethod.GET)
-    Suggestions suggest(@RequestParam("q") String query) throws IOException, SolrServerException {
+    SearchSuggestions suggest(@RequestParam("q") String query) throws IOException, SolrServerException {
         return searchService.suggest(query);
     }
 }

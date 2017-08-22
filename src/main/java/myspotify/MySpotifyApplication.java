@@ -1,10 +1,9 @@
 package myspotify;
 
-import lombok.Data;
+import myspotify.model.Album;
 import myspotify.model.Artist;
 import myspotify.model.Song;
-import myspotify.repository.ArtistRepository;
-import myspotify.service.SongService;
+import myspotify.service.Service;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -19,18 +18,16 @@ import java.util.List;
 public class MySpotifyApplication {
 
 	@Bean
-	CommandLineRunner populateDatabase(SongService songService,
-									   ArtistRepository artistRepository) {
+	CommandLineRunner populateDatabase(Service<Song, Long> songService,
+									   Service<Artist, Long> artistService,
+									   Service<Album, Long> albumService) {
 		return (args) -> {
-			List<SongData> songDataList = new ArrayList<>();
-			songDataList.add(new SongData("Ed Sheeran", "Shape of You", "1"));
-			songDataList.add(new SongData("Ofenbach", "Be Mine", "2"));
-			songDataList.add(new SongData("Alle Farben", "Bad Ideas", "3"));
-
+			List<SongData> songDataList = getSongDataList();
 			songDataList.forEach(songData -> {
-				Artist artist = artistRepository.save(new Artist(songData.getArtistName()));
 				try {
-					songService.save(new Song(songData.getSongName(), artist, songData.getFilename()));
+					Artist artist = artistService.save(new Artist(songData.artistName));
+					Album album = albumService.save(new Album(songData.albumName, artist));
+					songService.save(new Song(songData.songName, artist, album, songData.filename));
 				} catch (IOException | SolrServerException e) {
 					e.printStackTrace();
 				}
@@ -38,19 +35,33 @@ public class MySpotifyApplication {
 		};
 	}
 
+	private List<SongData> getSongDataList() {
+		List<SongData> songDataList = new ArrayList<>();
+		songDataList.add(new SongData("Ed Sheeran", "Shape of You", "Divide", "1"));
+		songDataList.add(new SongData("Ofenbach", "Be Mine", "Be Mine", "2"));
+		songDataList.add(new SongData("Alle Farben", "Bad Ideas", "Best Friend", "3"));
+		songDataList.add(new SongData("Beyonce", "Blue", "Lemonade", "1"));
+		songDataList.add(new SongData("Bruno Mars", "That's What I Like", "Magic", "2"));
+		songDataList.add(new SongData("Bob Marley", "No Woman, No Cry", "Legend", "3"));
+		songDataList.add(new SongData("Travis Scott", "The End", "Birds", "1"));
+		songDataList.add(new SongData("The Weekend", "Can't Feel My Face", "Beauty", "2"));
+		return songDataList;
+	}
+
 	public static void main(String[] args) {
 		SpringApplication.run(MySpotifyApplication.class, args);
 	}
 
-	@Data
 	private class SongData {
-		private String artistName;
-		private String songName;
-		private String filename;
+		public final String artistName;
+		public final String songName;
+		public final String albumName;
+		public final String filename;
 
-		public SongData(String artistName, String songName, String filename) {
+		public SongData(String artistName, String songName, String albumName, String filename) {
 			this.artistName = artistName;
 			this.songName = songName;
+			this.albumName = albumName;
 			this.filename = filename;
 		}
 	}

@@ -3,7 +3,8 @@ storage:
 
 solr:
   home: "solr"
-  defaultCore: "songs"
-  suggester:
-    requestHandler: "/suggest"
-    dictionary: "suggester"
+  cores:
+    default: "songs"
+    songs: "songs"
+    albums: "albums"
+    artists: "artists"

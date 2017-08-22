@@ -7,7 +7,7 @@
             <int name="rows">3</int>
             <str name="defType">edismax</str>
             <int name="mm">1</int>
-            <str name="qf">name^2 artistName^1</str>
+            <str name="qf">name</str>
         </lst>
     </requestHandler>
 
