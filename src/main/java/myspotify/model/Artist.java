@@ -30,8 +30,12 @@ public class Artist implements NamedEntity {
     @JsonIgnore
     private List<Album> albums = new ArrayList<>();
 
-    public Artist(String name) {
+    @JsonIgnore
+    private String imageFilename;
+
+    public Artist(String name, String imageFilename) {
         this.name = name;
+        this.imageFilename = imageFilename;
     }
 
     // jpa

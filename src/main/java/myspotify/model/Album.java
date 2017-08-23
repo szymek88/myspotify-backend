@@ -26,9 +26,13 @@ public class Album implements NamedEntity {
     @JsonIgnore
     private List<Song> songs = new ArrayList<>();
 
-    public Album(String name, Artist artist) {
+    @JsonIgnore
+    private String imageFilename;
+
+    public Album(String name, Artist artist, String imageFilename) {
         this.name = name;
         this.artist = artist;
+        this.imageFilename = imageFilename;
     }
 
     // required by entity classes

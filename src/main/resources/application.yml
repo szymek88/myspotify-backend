@@ -1,5 +1,6 @@
 storage:
-  location: "audio"
+  audio: "audio"
+  images: "images"
 
 solr:
   home: "solr"

@@ -1,6 +1,5 @@
 package myspotify.service.storage;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -12,11 +11,8 @@ import java.nio.file.Paths;
 @Service
 public class FileSystemStorageService implements StorageService {
 
-    @Value("${storage.location}")
-    private String rootLocation;
-
     @Override
-    public Resource load(String filename) {
+    public Resource load(String filename, String rootLocation) {
         try {
             Path path = Paths.get(rootLocation).resolve(filename);
             Resource file = new UrlResource(path.toUri());

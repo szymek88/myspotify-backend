@@ -23,13 +23,18 @@ public class Song implements NamedEntity {
     private Album album;
 
     @JsonIgnore
-    private String filename;
+    private String audioFilename;
 
-    public Song(String name, Artist artist, Album album, String filename) {
+    @JsonIgnore
+    private String imageFilename;
+
+    public Song(String name, Artist artist, Album album,
+                String audioFilename, String imageFilename) {
         this.name = name;
         this.artist = artist;
         this.album = album;
-        this.filename = filename;
+        this.audioFilename = audioFilename;
+        this.imageFilename = imageFilename;
     }
 
     // jpa
