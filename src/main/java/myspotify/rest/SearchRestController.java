@@ -23,6 +23,12 @@ class SearchRestController {
     @RequestMapping(value = "/search", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
     SearchResultsResources search(@RequestParam("q") String query) throws IOException, SolrServerException {
         SearchResults results = searchService.search(query);
+        // Imitate network delay
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return new SearchResultsResources(results);
     }
 

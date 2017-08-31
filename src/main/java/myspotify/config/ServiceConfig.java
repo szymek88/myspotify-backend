@@ -17,11 +17,6 @@ import org.springframework.context.annotation.Configuration;
 class ServiceConfig {
 
     @Bean
-    Service<Song, Long> songService(SongRepository repository, SongSolrRepository solrRepository) {
-        return new Service<>(repository, solrRepository);
-    }
-
-    @Bean
     Service<Album, Long> albumService(AlbumRepository repository, AlbumSolrRepository solrRepository) {
         return new Service<>(repository, solrRepository);
     }

@@ -9,3 +9,5 @@ solr:
     songs: "songs"
     albums: "albums"
     artists: "artists"
+
+spring.hateoas.use-hal-as-default-json-media-type: false

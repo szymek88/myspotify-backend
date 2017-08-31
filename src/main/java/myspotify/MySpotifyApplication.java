@@ -4,6 +4,7 @@ import myspotify.model.Album;
 import myspotify.model.Artist;
 import myspotify.model.Song;
 import myspotify.service.Service;
+import myspotify.service.SongService;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -18,7 +19,7 @@ import java.util.List;
 public class MySpotifyApplication {
 
 	@Bean
-	CommandLineRunner populateDatabase(Service<Song, Long> songService,
+	CommandLineRunner populateDatabase(SongService songService,
 									   Service<Artist, Long> artistService,
 									   Service<Album, Long> albumService) {
 		return (args) -> {
@@ -34,6 +35,9 @@ public class MySpotifyApplication {
 					e.printStackTrace();
 				}
 			});
+			Artist edSheeran = artistService.findOne(1l);
+			Album divideAlbum = albumService.findOne(1l);
+			fillAlbumWithSongs(getAlbumSongs(), edSheeran, divideAlbum, songService, "1");
 		};
 	}
 
@@ -50,24 +54,57 @@ public class MySpotifyApplication {
 		return songDataList;
 	}
 
+	private void fillAlbumWithSongs(List<SongData> songDataList, Artist artist, Album album,
+									SongService songService, String imageFilename) {
+		songDataList.forEach(songData -> {
+			try {
+				songService.save(new Song(songData.songName, artist, album,
+                        songData.audioFilename, imageFilename));
+			} catch (IOException | SolrServerException e) {
+				e.printStackTrace();
+			}
+		});
+	}
+
+	private List<SongData> getAlbumSongs() {
+		List<SongData> songDataList = new ArrayList<>();
+		songDataList.add(new SongData("Eraser", "1"));
+		songDataList.add(new SongData("Castle on the Hill", "2"));
+		songDataList.add(new SongData("Dive", "3"));
+		songDataList.add(new SongData("Perfect", "2"));
+		songDataList.add(new SongData("Galway Girl", "3"));
+		songDataList.add(new SongData("Happier", "1"));
+		songDataList.add(new SongData("New Man", "2"));
+		songDataList.add(new SongData("Hearts Dont't Break Around Here", "3"));
+		songDataList.add(new SongData("What Do I Know?", "1"));
+		songDataList.add(new SongData("How Would You Feel", "2"));
+		songDataList.add(new SongData("Supermarket Flowers", "3"));
+		return songDataList;
+	}
+
 	public static void main(String[] args) {
 		SpringApplication.run(MySpotifyApplication.class, args);
 	}
 
-	private class SongData {
-		public final String artistName;
-		public final String songName;
-		public final String albumName;
-		public final String audioFilename;
-		public final String imageFilename;
+	class SongData {
+		String artistName;
+		String songName;
+		String albumName;
+		String audioFilename;
+		String imageFilename;
 
-		public SongData(String artistName, String songName, String albumName,
+		SongData(String artistName, String songName, String albumName,
 						String audioFilename, String imageFilename) {
 			this.artistName = artistName;
 			this.songName = songName;
 			this.albumName = albumName;
 			this.audioFilename = audioFilename;
 			this.imageFilename = imageFilename;
+		}
+
+		SongData(String songName, String audioFilename) {
+			this.songName = songName;
+			this.audioFilename = audioFilename;
 		}
 	}
 }
