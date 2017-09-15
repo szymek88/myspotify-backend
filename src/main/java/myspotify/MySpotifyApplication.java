@@ -3,6 +3,8 @@ package myspotify;
 import myspotify.model.Album;
 import myspotify.model.Artist;
 import myspotify.model.Song;
+import myspotify.model.User;
+import myspotify.repository.UserRepository;
 import myspotify.service.Service;
 import myspotify.service.SongService;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -10,6 +12,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,7 +24,9 @@ public class MySpotifyApplication {
 	@Bean
 	CommandLineRunner populateDatabase(SongService songService,
 									   Service<Artist, Long> artistService,
-									   Service<Album, Long> albumService) {
+									   Service<Album, Long> albumService,
+									   UserRepository userRepository,
+									   BCryptPasswordEncoder passwordEncoder) {
 		return (args) -> {
 			List<SongData> songDataList = getSongDataList();
 			songDataList.forEach(songData -> {
@@ -38,6 +43,8 @@ public class MySpotifyApplication {
 			Artist edSheeran = artistService.findOne(1l);
 			Album divideAlbum = albumService.findOne(1l);
 			fillAlbumWithSongs(getAlbumSongs(), edSheeran, divideAlbum, songService, "1");
+
+			userRepository.save(new User("user", passwordEncoder.encode("user")));
 		};
 	}
 
@@ -68,9 +75,9 @@ public class MySpotifyApplication {
 
 	private List<SongData> getAlbumSongs() {
 		List<SongData> songDataList = new ArrayList<>();
-		songDataList.add(new SongData("Eraser", "1"));
-		songDataList.add(new SongData("Castle on the Hill", "2"));
-		songDataList.add(new SongData("Dive", "3"));
+		songDataList.add(new SongData("Eraser", "2"));
+		songDataList.add(new SongData("Castle on the Hill", "3"));
+		songDataList.add(new SongData("Dive", "1"));
 		songDataList.add(new SongData("Perfect", "2"));
 		songDataList.add(new SongData("Galway Girl", "3"));
 		songDataList.add(new SongData("Happier", "1"));

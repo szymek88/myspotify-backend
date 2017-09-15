@@ -20,7 +20,7 @@ class SearchRestController {
         this.searchService = searchService;
     }
 
-    @RequestMapping(value = "/search", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+    @GetMapping("/search")
     SearchResultsResources search(@RequestParam("q") String query) throws IOException, SolrServerException {
         SearchResults results = searchService.search(query);
         // Imitate network delay
@@ -32,7 +32,7 @@ class SearchRestController {
         return new SearchResultsResources(results);
     }
 
-    @RequestMapping(value = "/suggest", method = RequestMethod.GET)
+    @GetMapping("/suggest")
     SearchSuggestions suggest(@RequestParam("q") String query) throws IOException, SolrServerException {
         return searchService.suggest(query);
     }

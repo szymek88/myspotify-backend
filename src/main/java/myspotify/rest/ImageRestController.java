@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ImageRestController {
@@ -24,7 +21,7 @@ public class ImageRestController {
         this.storageService = storageService;
     }
 
-    @RequestMapping(value = "/images/{filename}", method = RequestMethod.GET)
+    @GetMapping("/images/{filename}")
     public ResponseEntity<Resource> loadImage(@PathVariable String filename) {
 
         Resource image = storageService.load(filename, rootLocation);

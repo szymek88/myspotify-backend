@@ -21,7 +21,7 @@ public class AudioFileRestController {
         this.storageService = storageService;
     }
 
-    @RequestMapping(value = "/audio/{filename}", method = RequestMethod.GET)
+    @GetMapping("/audio/{filename}")
     public ResponseEntity<Resource> loadAudioFile(@PathVariable String filename) {
 
         Resource file = storageService.load(filename, rootLocation);
