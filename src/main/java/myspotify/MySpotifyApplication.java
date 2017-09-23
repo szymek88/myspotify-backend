@@ -1,9 +1,7 @@
 package myspotify;
 
-import myspotify.model.Album;
-import myspotify.model.Artist;
-import myspotify.model.Song;
-import myspotify.model.User;
+import myspotify.model.*;
+import myspotify.repository.PlaylistRepository;
 import myspotify.repository.UserRepository;
 import myspotify.service.Service;
 import myspotify.service.SongService;
@@ -26,7 +24,8 @@ public class MySpotifyApplication {
 									   Service<Artist, Long> artistService,
 									   Service<Album, Long> albumService,
 									   UserRepository userRepository,
-									   BCryptPasswordEncoder passwordEncoder) {
+									   BCryptPasswordEncoder passwordEncoder,
+									   PlaylistRepository playlistRepository) {
 		return (args) -> {
 			List<SongData> songDataList = getSongDataList();
 			songDataList.forEach(songData -> {
@@ -44,8 +43,18 @@ public class MySpotifyApplication {
 			Album divideAlbum = albumService.findOne(1l);
 			fillAlbumWithSongs(getAlbumSongs(), edSheeran, divideAlbum, songService, "1");
 
-			userRepository.save(new User("user", passwordEncoder.encode("user")));
+			User user = userRepository.save(new User("user", passwordEncoder.encode("user")));
+
+			savePlaylist(songService, playlistRepository, user);
 		};
+	}
+
+	private void savePlaylist(SongService songService, PlaylistRepository playlistRepository,
+							  User user) throws IOException, SolrServerException {
+		Playlist playlist = playlistRepository.save(new Playlist("My Playlist", user));
+		for (long songId = 4; songId <= 8; songId++) {
+			songService.addSongToPlaylist(songId, playlist.getId());
+		}
 	}
 
 	private List<SongData> getSongDataList() {

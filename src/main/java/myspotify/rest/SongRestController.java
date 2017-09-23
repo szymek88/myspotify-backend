@@ -1,16 +1,16 @@
 package myspotify.rest;
 
 import myspotify.hateoas.SongResource;
-import myspotify.model.Song;
-import myspotify.service.Service;
+import myspotify.repository.PlaylistRepository;
 import myspotify.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resources;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-import static java.util.stream.Collectors.toList;
+import static myspotify.rest.RestControllerUtils.*;
+import static myspotify.rest.RestControllerUtils.imitateNetworkDelay;
 
 @RestController
 @RequestMapping("/songs")
@@ -24,38 +24,31 @@ public class SongRestController {
     }
 
     @GetMapping(value = "/album/{albumId}", produces = "application/json")
-    public Resources<SongResource> readSongsFromAlbum(@PathVariable Long albumId) {
-        List<SongResource> songsResources = songService
-                .findByAlbum(albumId)
-                .stream()
-                .map(SongResource::new)
-                .collect(toList());
-
-        // Imitate network delay
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        return new Resources<>(songsResources);
+    public Resources<SongResource> readAlbumSongs(@PathVariable Long albumId) {
+        imitateNetworkDelay();
+        return mapToResources(songService.findByAlbum(albumId), song -> new SongResource(song));
     }
 
     @GetMapping(value = "/artist/{artistId}", produces = "application/json")
-    public Resources<SongResource> readSongsOfArtist(@PathVariable Long artistId) {
-        List<SongResource> songsResources = songService
-                .findByAlbum(artistId)
-                .stream()
-                .map(SongResource::new)
-                .collect(toList());
+    public Resources<SongResource> readArtistSongs(@PathVariable Long artistId) {
+        imitateNetworkDelay();
+        return mapToResources(songService.findByArtist(artistId), song -> new SongResource(song));
+    }
 
-        // Imitate network delay
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    @GetMapping(value = "/playlist/{playlistId}", produces = "application/json")
+    public Resources<SongResource> readPlaylistSongs(@PathVariable Long playlistId) {
+        return mapToResources(songService.findByPlaylist(playlistId), song -> new SongResource(song));
+    }
 
-        return new Resources<>(songsResources);
+    @PostMapping("/{songId}/{playlistId}")
+    ResponseEntity addSongToPlaylist(@PathVariable Long songId, @PathVariable Long playlistId) {
+        songService.addSongToPlaylist(songId, playlistId);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{songId}/{playlistId}")
+    ResponseEntity removeSongFromPlaylist(@PathVariable Long songId, @PathVariable Long playlistId) {
+        songService.removeSongFromPlaylist(songId, playlistId);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

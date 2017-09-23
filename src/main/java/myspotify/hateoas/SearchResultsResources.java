@@ -20,20 +20,11 @@ public class SearchResultsResources {
     @Getter
     private Resources<ArtistResource> artistsResources;
 
-    public SearchResultsResources(SearchResults results) {
-        songsResources = mapToResources(results.songs, song -> new SongResource(song));
-        albumsResources = mapToResources(results.albums, album -> new AlbumResource(album));
-        artistsResources = mapToResources(results.artists, artist -> new ArtistResource(artist));
+    public SearchResultsResources(Resources<SongResource> songsResources,
+                                  Resources<AlbumResource> albumsResources,
+                                  Resources<ArtistResource> artistsResources) {
+        this.songsResources = songsResources;
+        this.albumsResources = albumsResources;
+        this.artistsResources = artistsResources;
     }
-
-    private <Entity, Resource extends ResourceSupport> Resources<Resource>
-    mapToResources(List<Entity> entities, ResourceMapper<Entity, Resource> mapper) {
-        List<Resource> resources = entities
-                .stream()
-                .map(mapper::mapToResource)
-                .collect(toList());
-
-        return new Resources<>(resources);
-    }
-
 }

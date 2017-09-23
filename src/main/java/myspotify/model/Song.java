@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -27,6 +29,10 @@ public class Song implements NamedEntity {
 
     @JsonIgnore
     private String imageFilename;
+
+    @ManyToMany(mappedBy = "songs")
+    @JsonIgnore
+    private List<Playlist> playlists = new ArrayList<>();
 
     public Song(String name, Artist artist, Album album,
                 String audioFilename, String imageFilename) {

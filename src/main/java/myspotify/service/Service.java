@@ -12,27 +12,27 @@ import java.util.List;
 
 public class Service<Entity extends NamedEntity, Id extends Serializable> {
 
-    private final JpaRepository<Entity, Id> repository;
+    private final JpaRepository<Entity, Id> songRepository;
     private final SolrRepository<Entity, Id> solrRepository;
 
     public Service(JpaRepository<Entity, Id> repository, SolrRepository<Entity, Id> solrRepository) {
-        this.repository = repository;
+        this.songRepository = repository;
         this.solrRepository = solrRepository;
     }
 
     @Transactional
     public Entity save(Entity entity) throws IOException, SolrServerException {
-        Entity savedEntity = repository.save(entity);
+        Entity savedEntity = songRepository.save(entity);
         solrRepository.save(savedEntity);
         return savedEntity;
     }
 
     public Entity findOne(Id id) {
-        return repository.findOne(id);
+        return songRepository.findOne(id);
     }
 
     public List<Entity> findAll() {
-        return repository.findAll();
+        return songRepository.findAll();
     }
 
     public List<Entity> search(String query) throws IOException, SolrServerException {

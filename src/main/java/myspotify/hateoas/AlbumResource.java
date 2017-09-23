@@ -21,6 +21,6 @@ public class AlbumResource extends ResourceSupport {
                 .loadImage(imageFilename)).withRel("image"));
         Long albumId = album.getId();
         this.add(linkTo(methodOn(SongRestController.class)
-                .readSongsFromAlbum(albumId)).withRel("songs"));
+                .readAlbumSongs(albumId)).withRel("songs"));
     }
 }
